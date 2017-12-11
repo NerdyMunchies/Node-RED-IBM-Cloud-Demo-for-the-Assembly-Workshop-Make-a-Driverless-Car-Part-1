@@ -10,6 +10,7 @@ Since the system is to be operable in-doors and collect information that will al
 The connecting of the described components is made possible and simple through the deploying a Node-RED the Node-RED Node.js application instance. <br/>
 
 ### Architecture overview
+![architecture_overview](https://user-images.githubusercontent.com/10744356/33858376-bfc054b6-dee8-11e7-90a5-024867f1fc34.png)
 
 ### Pre-requisite
 An IBM Cloud account - A lite account, which is a free of charge account that doesn’t expire, can be created through going to [IBM Cloud](http://ibm.biz/AssemblyCar1). <br/>
@@ -25,6 +26,7 @@ Insert video here <br/>
 
 ### Steps to configure the Node-RED application and other components
 From the hamburger menu at the top left of the page, the user can access the dashboard, which will allow him/her to see all the applications and services that has been created. Click on the name of the application to go to a window that provides more details about the application. If you click on Connection on the menu seen on the left hand-side, you will notice that there are two connections: <app-name>-cloudantNoSQLDB and <app-name>-iotf-service. <br/>
+
 
 #### Internet of Things Platform service
 If we click on <app-name>-iotf-service, it will take us to the page with the details about the IoT Platform service. Go to Manage and then click on Launch. This will take us to the page where we can configure device we can connect to among other things. At the top right of the page, we see an ID, this is the organization ID and it is one of the things needed to configure the connection between a device and the IoT Platform service. <br/>
@@ -63,6 +65,7 @@ In case Raspberry PI is not available at hand, you use the file called send_samp
 
 Insert Pic here <br/>
 
+
 #### Cloudant NoSQL database
 If we click on <app-name>-cloudantNoSQLDB, it will take us to the page with the details about the Cloudant NoSQL DB service. Click on Service credentials on the menu seen on the left hand-side.  If no service credentials are found, created new credential. Go to the newly created credential and select View credentials. Then, copy both the content into a notepad for later use. The username and password will be used for authentication to allow us to communicate with the database. <br/>
 
@@ -76,6 +79,7 @@ One way we ensure that we define what categories of data we might need from the 
 
 Insert video here <br/>
 
+
 #### Node-RED application
 Go back to the dashboard click on the application you created earlier. In order to access the Node-RED editor used to build you application click on Visit App URL. Follow the direction to access the Node-RED editor (you are encouraged to secure your Node-RED editor to ensure that only authorized users can access it). Click on Go to your Node-RED flow editor. <br/>
 
@@ -88,9 +92,3 @@ Insert video here <br/>
 
 We will add an ibmiot node, which can be seen under input, to allow us to consume any data received by the IoT Platform service. By clicking on the node, we can change its properties and set the Authentication to Bluemix Service, Device Type and Device id to the device type and device Id that we defined in the IoT Platform service. We will connect it to a debug node, which can be found under output. Before we continue, we will check if our application can receive any data from the Raspberry PI, which should show as a JSON object under the debug tab on the right.
 Insert video here <br/>
-
-
-
-
-
-
