@@ -44,7 +44,7 @@ authMethod = "token"
 authToken = #add authentication token from the IoT platform service
 
 def myOnPublishCallback():
-  print "Confirmed event received by IoTF\n"
+	print "Confirmed event received by IoTF\n"
 
 # Initialize the device client.
 deviceOptions = {"org": organization, "type": deviceType, "id": deviceId, "auth-method": authMethod, "auth-token": authToken}
@@ -55,7 +55,7 @@ print "init successful"
 def send(data):
 	success = client.publishEvent("data", "json", data, qos=0, on_publish=myOnPublishCallback)
 	if not success:
-    print "Not connected to IoTF"
+	    print "Not connected to IoTF"
 
 client.connect()
 send({'IR':INR, "US": USS, "X": X1, "Y": Y1, "Z": Z1 })
