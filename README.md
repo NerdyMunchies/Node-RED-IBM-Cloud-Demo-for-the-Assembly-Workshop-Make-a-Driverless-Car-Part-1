@@ -10,7 +10,7 @@ Since the system is to be operable in-doors and collect information that will al
 The connecting of the described components is made possible and simple through the deploying a Node-RED the Node-RED Node.js application instance. <br/>
 
 ### Architecture overview
-![architecture_overview](https://user-images.githubusercontent.com/10744356/33858376-bfc054b6-dee8-11e7-90a5-024867f1fc34.png)
+![architecture_overview](https://user-images.githubusercontent.com/10744356/33858499-45ab2b3c-dee9-11e7-96e0-2012d01d0f67.png)
 
 ### Pre-requisite
 An IBM Cloud account - A lite account, which is a free of charge account that doesn’t expire, can be created through going to [IBM Cloud](http://ibm.biz/AssemblyCar1). <br/>
