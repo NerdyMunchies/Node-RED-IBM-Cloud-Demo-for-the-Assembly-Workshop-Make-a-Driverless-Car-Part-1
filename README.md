@@ -90,5 +90,8 @@ We will notice that we have an error saying that we imported unrecognized types.
 
 Insert video here <br/>
 
-We will add an ibmiot node, which can be seen under input, to allow us to consume any data received by the IoT Platform service. By clicking on the node, we can change its properties and set the Authentication to Bluemix Service, Device Type and Device id to the device type and device Id that we defined in the IoT Platform service. We will connect it to a debug node, which can be found under output. Before we continue, we will check if our application can receive any data from the Raspberry PI, which should show as a JSON object under the debug tab on the right.
+We will add an ibmiot node, which can be seen under input, to allow us to consume any data received by the IoT Platform service. By clicking on the node, we can change its properties and set the Authentication to Bluemix Service, Device Type and Device id to the device type and device Id that we defined in the IoT Platform service. We will connect it to a debug node, which can be found under output. Before we continue, we will check if our application can receive any data from the Raspberry PI, which should show as a JSON object under the debug tab on the right. <br/>
+
 Insert video here <br/>
+
+Connect
