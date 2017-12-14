@@ -81,24 +81,22 @@ Next, go to Manage and then click on Launch. This will launch an interface throu
 
 One way we ensure that we define what categories of data we might need from the database is by defining functions, which can be considered as a form of a special document called "design document". We will be creating a design document with a simple view, which is simply how you can define your functions, to grab all documents with the key returned corresponding to the timestamp defined for each car probe point and the value corresponding to the entire document object. To do this, after selecting the name of your database, go to design documents, click on the plus sign and click on **New View**. In the new design field, type the name of the design document (here, we called it carProbe) and in the **Index name**, type the name of your view, which is should be something representative of what you are trying to do (since we are grabbing all the documents, we called it alldocs). In the **Map function field**, change doc.id to doc.timestamp and 1 to doc. Finally, click on **Create Document**.  
 
-Insert video here <br/>
 ![Alt Text](https://j.gifs.com/MQ9PwB.gif)
 
 #### Node-RED application
 Go back to the dashboard and click on the application you created earlier. In order to access the Node-RED editor used to build the application, click on **Visit App URL**. Follow the directions to access the Node-RED editor (you are encouraged to secure your Node-RED editor to ensure that only authorized users can access it). Click on **Go to your Node-RED flow editor**.
 
-Insert video here
 ![Alt Text](https://j.gifs.com/329gw4.gif)
 
 A new Node-RED flow appears containing nodes representing a sample application. Select all the nodes and delete them as we will be importing our own flow. In this repository, go to the file called **Node-REDflow_Partial.json** and copy its content. In the Node-RED editor, go to the hamburger menu at the top right of the page after which select **Import Clipboard**. Paste the content of the JSON file and click on **Import**. This will mostly import the calculation part of the application and will be missing some nodes that we will be adding.
 
 We will notice that we have an error saying that we imported unrecognized types. These are related to the dashboard nodes that we will be working with shortly. To work with these nodes, we need to install a module, which can be achieved by going to the hamburger menu again and clicking on **Manage palette**. In the **Install** tab, we will search for **node-red-dashboard** module and install it. If look at the node type menu on the left hand-side, we will notice that a number of nodes have been added under the **dashboard** node type.
 
-Insert video here
+![Alt Text](https://j.gifs.com/869nBr.gif)
 
 We will add an **ibmiot** node, which can be seen under **input**, to allow us to consume any data received by the **IoT Platform** service. By double-clicking on the node, we can change its properties and set the **Authentication** to **Bluemix Service**, **Device Type** and **Device id** to the device type and device id that we defined in the IoT Platform service. We will connect it to a **debug node**, which can be found under **output** node type. Before we continue, we will check if our application can receive any data from the Raspberry PI, which should show as a JSON object under the **debug** tab on the right.
 
-Insert video here
+Insert PIC here
 
 After that, connect the **IBM IoT** node to the SetArgs1 node from the imported flow. Double-click on that node and look for global.set(“dburl”, “xxx”) and replace “xxx” with the url for your database, which you can find from the credentials we copied earlier. This is used in various nodes in the flow to communicate with the database.
 Next, look for the **cloudant out** node under storage and connect to SetArgs1 in your flow. Edit the node’s properties and change the services to point to your **Cloudant NoSQL database** service and add your database name in the appropriate field. Make sure that the operation is **insert** and that it is set to **Only store msg.payload object**.
@@ -106,6 +104,7 @@ Next, look for the **cloudant out** node under storage and connect to SetArgs1 i
 Insert PIC here
 
 For all of the HTTP request nodes, make sure to add the username and password previously copied from the database credentials page by editing the node’s properties. An example is provided below:
+
 Insert PIC here
 
 Now that all the operational nodes are done, it is time to create and customize the dashboard, which provides the User Interface (UI) part of the application. On the right hand-side of the page, click on the **dashboard** tab. We will notice that there are 3 tabs, each used to change the look and feel of the UI.
