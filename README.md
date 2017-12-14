@@ -95,16 +95,19 @@ We will notice that we have an error saying that we imported unrecognized types.
 ![Alt Text](https://j.gifs.com/869nBr.gif)
 
 We will add an **ibmiot** node, which can be seen under **input**, to allow us to consume any data received by the **IoT Platform** service. By double-clicking on the node, we can change its properties and set the **Authentication** to **Bluemix Service**, **Device Type** and **Device id** to the device type and device id that we defined in the IoT Platform service. We will connect it to a **debug node**, which can be found under **output** node type. Before we continue, we will check if our application can receive any data from the Raspberry PI, which should show as a JSON object under the **debug** tab on the right.
-
-Insert PIC here
+![config_ibmiot](https://user-images.githubusercontent.com/10744356/33990248-b3e2b1a0-e0e3-11e7-8006-ed5b3d5a731a.PNG)
 
 After that, connect the **IBM IoT** node to the SetArgs1 node from the imported flow. Double-click on that node and look for global.set(“dburl”, “xxx”) and replace “xxx” with the url for your database, which you can find from the credentials we copied earlier. This is used in various nodes in the flow to communicate with the database.
+
+![dburl_setting](https://user-images.githubusercontent.com/10744356/33990245-b366d8a0-e0e3-11e7-9f61-bdc0475d6c46.PNG)
+
 Next, look for the **cloudant out** node under storage and connect to SetArgs1 in your flow. Edit the node’s properties and change the services to point to your **Cloudant NoSQL database** service and add your database name in the appropriate field. Make sure that the operation is **insert** and that it is set to **Only store msg.payload object**.
 
-Insert PIC here
+![cloudantdb](https://user-images.githubusercontent.com/10744356/33990247-b3b54ef4-e0e3-11e7-8575-035ad4bc1430.PNG)
 
 For all of the HTTP request nodes, make sure to add the username and password previously copied from the database credentials page by editing the node’s properties. An example is provided below:
 
-Insert PIC here
+![auth_http](https://user-images.githubusercontent.com/10744356/33990246-b38f1fb8-e0e3-11e7-8a18-bf949b7459ea.PNG)
 
 Now that all the operational nodes are done, it is time to create and customize the dashboard, which provides the User Interface (UI) part of the application. On the right hand-side of the page, click on the **dashboard** tab. We will notice that there are 3 tabs, each used to change the look and feel of the UI.
+
