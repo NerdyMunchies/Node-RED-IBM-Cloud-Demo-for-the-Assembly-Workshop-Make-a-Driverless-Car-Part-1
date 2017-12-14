@@ -122,6 +122,6 @@ To use one of the nodes under the **dashboard** node type, we first create a **t
 
 One of the **dashboard** nodes missing in the **Raw Data Dashboard** is the one to display the IR values on a gauge. To do that, just drag the node, and configure it as seen below. This will need to be done for any values that needs to be displayed, whether as a graph, gauge, or simply a number.
 
-[Alt Text](https://j.gifs.com/MQ9P25.gif)
+![Alt Text](https://j.gifs.com/MQ9P25.gif)
 
 You can import the finale version of the flow from the file **Node-RED flow_Full.json** that can be found in this repository.
