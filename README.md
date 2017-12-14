@@ -18,7 +18,7 @@ An architecture overview of the system can be found below.
 
 ![architecture_overview](https://user-images.githubusercontent.com/10744356/33858499-45ab2b3c-dee9-11e7-96e0-2012d01d0f67.png)
 
-For the connection between the Raspberry PI and the sensor, check the schematic below (refer to [IBM_selfdriving](https://github.com/The-Assembly/IBM_selfdriving) repository for more details on the hardware side of things).
+For the connection between the Raspberry PI and the sensor, check the schematic below (refer to [The-Assembly/IBM_selfdriving](https://github.com/The-Assembly/IBM_selfdriving) repository for more details on the hardware side of things).
 ![rpi_connections](https://user-images.githubusercontent.com/10744356/33993138-b8b996ca-e0ee-11e7-8d20-355460c3e034.png)
 
 ## Pre-requisite
