@@ -1,0 +1,762 @@
+[
+    {
+        "id": "6a1d4770.bb7c",
+        "type": "tab",
+        "label": "Main Functions",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "556f3292.5a8894",
+        "type": "tab",
+        "label": "Raw Data Dashboard",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "f9285d22.9693c",
+        "type": "function",
+        "z": "6a1d4770.bb7c",
+        "name": "SetArgs1",
+        "func": "//Add the following to the data sent be RPI Zero (acceleration in x,y&z direction (in m/s^2), IR (digital value), Ultra-Sonic (in cm))\n//Set a trip ID\nmsg.payload.trip_id = \"trip0001\";\n\n//Set road type\nmsg.payload.road_type = \"Sample Track\";\n\n//Set timestamp\nvar date = new Date();\ndate.setTime(date.getTime() + (4*60*60*1000)); //Added 4hrs as the timezone is Asia/Dubai (can use moment module and set the timezone)\nmsg.payload.timestamp = date.toISOString();\n\n//Set time of the day\nvar hours = date.getHours();\nmsg.payload.hour = hours;\nif (hours>=0 && hours<12){\n    msg.payload.time_of_day = \"Morning\";\n}else if (hours>=12 && hours<16){\n    msg.payload.time_of_day = \"Afternoon\";\n}else if (hours>=16 && hours<20){\n    msg.payload.time_of_day = \"Evening\";\n}else{\n    msg.payload.time_of_day = \"Night\";\n}\n\nif(msg.payload.acc_x < 1 && msg.payload.acc_x > -1){\n    msg.payload.acc_x = 0;\n}\nif(msg.payload.acc_y < 1 && msg.payload.acc_y > -1){\n    msg.payload.acc_y = 0;\n}\nif(msg.payload.acc_z < 1 && msg.payload.acc_z > -1){\n    msg.payload.acc_z = 0;\n}\n\n//Set the DB url for use by all nodes\nglobal.set(\"dburl\",\"https://c3018fd1-e69b-44fd-948d-24f84a957c12-bluemix.cloudant.com/\");\n\n//Get the last 2 Docs\nmsg.url = global.get(\"dburl\") + \"iotdb/_design/carProbe/_view/alldocs?limit=2&descending=true\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 206.74996948242188,
+        "y": 219.25,
+        "wires": [
+            [
+                "a2d23828.b71538"
+            ]
+        ]
+    },
+    {
+        "id": "e7661685.cdc508",
+        "type": "cloudant out",
+        "z": "6a1d4770.bb7c",
+        "name": "Trip Details",
+        "cloudant": "",
+        "database": "iotdb",
+        "service": "watson-iot-sample-MH-cloudantNoSQLDB",
+        "payonly": true,
+        "operation": "insert",
+        "x": 583.2500915527344,
+        "y": 137.7500286102295,
+        "wires": []
+    },
+    {
+        "id": "463c9e96.d7b74",
+        "type": "debug",
+        "z": "6a1d4770.bb7c",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 583.1000671386719,
+        "y": 86.40000534057617,
+        "wires": []
+    },
+    {
+        "id": "a2d23828.b71538",
+        "type": "delay",
+        "z": "6a1d4770.bb7c",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "2",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "x": 400,
+        "y": 212,
+        "wires": [
+            [
+                "463c9e96.d7b74",
+                "e7661685.cdc508",
+                "abbf36b1.322bc8"
+            ]
+        ]
+    },
+    {
+        "id": "d1ea37e0.b3ddc",
+        "type": "ibmiot in",
+        "z": "556f3292.5a8894",
+        "authentication": "boundService",
+        "apiKey": "",
+        "inputType": "evt",
+        "deviceId": "MyCar",
+        "applicationId": "",
+        "deviceType": "raspberryPi",
+        "eventType": "+",
+        "commandType": "",
+        "format": "json",
+        "name": "IBM IoT",
+        "service": "registered",
+        "allDevices": false,
+        "allApplications": "",
+        "allDeviceTypes": "",
+        "allEvents": true,
+        "allCommands": "",
+        "allFormats": "",
+        "qos": 0,
+        "x": 86.00000381469727,
+        "y": 144.00000953674316,
+        "wires": [
+            [
+                "806fb848.3d01"
+            ]
+        ]
+    },
+    {
+        "id": "7e1f43f1.69fb1c",
+        "type": "function",
+        "z": "556f3292.5a8894",
+        "name": "Display IR",
+        "func": "IR = msg.payload.IR;\n\nmsg = {topic:\"IR\", payload:IR};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 544.5000038146973,
+        "y": 281.0000400543213,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "beb83dfe.f75728",
+        "type": "function",
+        "z": "556f3292.5a8894",
+        "name": "Display Ultra-Sonic",
+        "func": "US = msg.payload.US;\n\nmsg = {topic:\"US\", payload:US};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 571.5000038146973,
+        "y": 326.0000400543213,
+        "wires": [
+            [
+                "4776c8c2.6e83d8"
+            ]
+        ]
+    },
+    {
+        "id": "4978641e.e6f024",
+        "type": "function",
+        "z": "556f3292.5a8894",
+        "name": "Display Acceleration (z)",
+        "func": "Z = msg.payload.acc_z;\n\nmsg = {topic:\"Z\", payload:Z};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 589.5000038146973,
+        "y": 378.0000400543213,
+        "wires": [
+            [
+                "12fd14a2.d3e43b"
+            ]
+        ]
+    },
+    {
+        "id": "8a37c4aa.9b5d58",
+        "type": "function",
+        "z": "556f3292.5a8894",
+        "name": "Display Acceleration (x)",
+        "func": "X = msg.payload.acc_x;\n\nmsg = {topic:\"X\", payload:X};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 589.5000038146973,
+        "y": 427.0000400543213,
+        "wires": [
+            [
+                "12fd14a2.d3e43b"
+            ]
+        ]
+    },
+    {
+        "id": "32515701.60dcd",
+        "type": "function",
+        "z": "556f3292.5a8894",
+        "name": "Display Acceleration (y)",
+        "func": "Y = msg.payload.acc_y;\n\nmsg = {topic:\"Y\", payload:Y};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 594.5000038146973,
+        "y": 479.0000400543213,
+        "wires": [
+            [
+                "12fd14a2.d3e43b"
+            ]
+        ]
+    },
+    {
+        "id": "abbf36b1.322bc8",
+        "type": "http request",
+        "z": "6a1d4770.bb7c",
+        "name": "getLast2Docs",
+        "method": "GET",
+        "ret": "obj",
+        "url": "",
+        "tls": "",
+        "x": 610,
+        "y": 212,
+        "wires": [
+            [
+                "6a4d2ecf.96948"
+            ]
+        ]
+    },
+    {
+        "id": "6a4d2ecf.96948",
+        "type": "switch",
+        "z": "6a1d4770.bb7c",
+        "name": "# CarProbePoints",
+        "property": "payload.total_rows",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "gte",
+                "v": "2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 820.2499694824219,
+        "y": 212,
+        "wires": [
+            [
+                "a2434c5f.078d1"
+            ],
+            [
+                "13f536d2.7b0921"
+            ]
+        ]
+    },
+    {
+        "id": "13f536d2.7b0921",
+        "type": "function",
+        "z": "6a1d4770.bb7c",
+        "name": "setArg2",
+        "func": "prev_point = msg.payload.rows[1].value; //JSON object containing values related to the previous Car Probe Point\nmsg.payload = msg.payload.rows[0].value; //JSON object containing values related to the current Car Probe Point\n\n//Find time difference between the two Car Probe Point (in s). It will be used for calculating some of the values\nt_diff = msg.payload.t_diff = (Math.abs(new Date(msg.payload.timestamp) - new Date(prev_point.timestamp)))/1000;\n\n//Add the following to the data to that retrieved from the Cloudant NoSQL DB\n//Set values for heading, longitude, latitude, velocity vectors,resultant speed and distance travelled\nmsg.payload.V_x = prev_point.V_x + msg.payload.acc_x*t_diff; // Velocity in the x direction (in m/s)\nmsg.payload.V_y = prev_point.V_y + msg.payload.acc_y*t_diff; // Velocity in the y direction (in m/s)\nmsg.payload.V_z = prev_point.V_z + msg.payload.acc_z*t_diff; // Velocity in the z direction (in m/s)\n\n// Calculate Resultant speed (in m/s)\nmsg.payload.Sr = Math.sqrt( Math.pow(msg.payload.V_x, 2) + Math.pow(msg.payload.V_y, 2) + Math.pow(msg.payload.V_z, 2) );\n\n//Calculate Distance travelled (in m)\nmsg.payload.distance = msg.payload.Sr * t_diff;\nglobal.set(\"distance\", global.get(\"distance\") + msg.payload.distance); // update total distance (in m)\n\nif (msg.payload.distance !== 0){\n    //Calculate new heading //Angle of moving direction, North is 0 and value increases clockwise (in degrees)\n\tmsg.payload.heading = Math.acos(msg.payload.V_y/msg.payload.distance)*180/Math.PI;\n\t\n\t//Longitude and Latitude of previous Car Probe Point (in degrees)\n\tlat1 = prev_point.latitude;\n\tlon1 = prev_point.longitude;\n\n\tvar radius = 6371e6; // (Mean) radius of earth in meters\n\tvar toRadians = function(v) { return v * Math.PI / 180; };\n\tvar toDegrees = function(v) { return v * 180 / Math.PI; };\n\n\tvar angular_dist = msg.payload.distance / radius; // angular distance in radians\n\tvar heading_rad = toRadians(msg.payload.heading);\n\n\tvar lat1_rad = toRadians(lat1);\n\tvar lon1_rad = toRadians(lon1);\n\n\tvar sin_lat1_rad = Math.sin(lat1_rad), cos_lat1_rad = Math.cos(lat1_rad);\n\tvar sin_angular_dist = Math.sin(angular_dist), cos_angular_dist = Math.cos(angular_dist);\n\tvar sin_heading_rad = Math.sin(heading_rad), cos_heading_rad = Math.cos(heading_rad);\n\n\tvar sin_lat2_rad = sin_lat1_rad*cos_angular_dist + cos_lat1_rad*sin_angular_dist*cos_heading_rad;\n\tvar lat2_rad = Math.asin(sin_lat2_rad);\n\tvar y = sin_heading_rad * sin_angular_dist * cos_lat1_rad;\n\tvar x = cos_angular_dist - sin_lat1_rad * sin_lat2_rad;\n\tvar lon2_rad = lon1_rad + Math.atan2(y, x);\n\n\tvar lat2 = toDegrees(lat2_rad);\n\tvar lon2 = (toDegrees(lon2_rad)+540)%360-180; // normalise to −180..+180 degrees\n\n\tmsg.payload.latitude = lat2;\n\tmsg.payload.longitude = lon2;\n\n}else{\n    //If no deistance is travelled use the heading, longitude and latitude of the previous Car Probe Point\n\tmsg.payload.heading = prev_point.heading;\n\tmsg.payload.latitude = prev_point.latitude;\n\tmsg.payload.longitude = prev_point.longitude;\n}\n\n//Url to be passed to update the doc to which the above data should belong to\nvar url= global.get(\"dburl\")+\"iotdb/\" + msg.payload._id + \"?rev=\" + msg.payload._rev;\nmsg.url = url;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 996.2499694824219,
+        "y": 252.5,
+        "wires": [
+            [
+                "68e278d2.0b9da",
+                "e9aeb92a.cc6db8",
+                "5bd34ed0.8cf158"
+            ]
+        ]
+    },
+    {
+        "id": "a2434c5f.078d1",
+        "type": "function",
+        "z": "6a1d4770.bb7c",
+        "name": "setArg2 (1st point)",
+        "func": "msg.payload = msg.payload.rows[0].value; //JSON object containing values related to the current Car Probe Point\n\n//Add the following to the data to that retrieved from the Cloudant NoSQL DB\n//Set initial values for heading, longitude, latitude, velocity vectors,resultant speed and distance travelled\nmsg.payload.heading = 90; //Angle of moving direction, North is 0 and value increases clockwise (in degrees)\nmsg.payload.latitude = 40.768216; //Latitude in degrees\nmsg.payload.longitude = -74.18529; //Longitude in degrees\nmsg.payload.V_x = 0; // Velocity in the x direction (in m/s)\nmsg.payload.V_y = 0; // Velocity in the y direction (in m/s)\nmsg.payload.V_z = 0; // Velocity in the z direction (in m/s)\nmsg.payload.Sr = 0; // Resultant speed (in m/s)\nmsg.payload.distance = 0; // Distance travelled (in m)\nglobal.set(\"distance\",0); // Set total distance travelled to 0 (in m)\n\n//Url to be passed to update the doc to which the above data should belong to\nvar url= global.get(\"dburl\")+\"iotdb/\" + msg.payload._id + \"?rev=\" + msg.payload._rev;\nmsg.url = url;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1019.75,
+        "y": 166.25,
+        "wires": [
+            [
+                "68e278d2.0b9da",
+                "e9aeb92a.cc6db8",
+                "5bd34ed0.8cf158"
+            ]
+        ]
+    },
+    {
+        "id": "68e278d2.0b9da",
+        "type": "http request",
+        "z": "6a1d4770.bb7c",
+        "name": "Update",
+        "method": "PUT",
+        "ret": "obj",
+        "url": "",
+        "tls": "",
+        "x": 1252.4999618530273,
+        "y": 225.50000619888306,
+        "wires": [
+            [
+                "3eff20cb.fcb7"
+            ]
+        ]
+    },
+    {
+        "id": "d818dd7c.08d5a",
+        "type": "inject",
+        "z": "556f3292.5a8894",
+        "name": "clear",
+        "topic": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 538.0000610351562,
+        "y": 98.00000381469727,
+        "wires": [
+            [
+                "4776c8c2.6e83d8",
+                "12fd14a2.d3e43b"
+            ]
+        ]
+    },
+    {
+        "id": "d5b6fe15.c01f",
+        "type": "http request",
+        "z": "6a1d4770.bb7c",
+        "name": "getLast10Docs",
+        "method": "GET",
+        "ret": "obj",
+        "url": "",
+        "tls": "",
+        "x": 1501.1999740600586,
+        "y": 300.0000066757202,
+        "wires": [
+            [
+                "bcb2ce3b.595968"
+            ]
+        ]
+    },
+    {
+        "id": "bcb2ce3b.595968",
+        "type": "delay",
+        "z": "6a1d4770.bb7c",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "300",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 1638.699951171875,
+        "y": 224.25003051757812,
+        "wires": [
+            [
+                "d8970877.ed391"
+            ]
+        ]
+    },
+    {
+        "id": "d8970877.ed391",
+        "type": "switch",
+        "z": "6a1d4770.bb7c",
+        "name": "# CarProbePoints",
+        "property": "payload.total_rows",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "gte",
+                "v": "2",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 1821.949951171875,
+        "y": 223.5,
+        "wires": [
+            [
+                "9f9eb8a1.7907e"
+            ],
+            [
+                "371962ae.f419ee"
+            ]
+        ]
+    },
+    {
+        "id": "371962ae.f419ee",
+        "type": "function",
+        "z": "6a1d4770.bb7c",
+        "name": "Driving behavior",
+        "func": "var prev_Sr = msg.payload.rows[1].value.Sr; // JSON object containing values related to the previous Car Probe Point\nvar curr_Sr = msg.payload.rows[0].value.Sr; // JSON object containing values related to the current Car Probe Point\nvar thres_Sr_diff = 4; // Threshold to determine harsh acceleration and braking\nvar thres_Sr = 15; // Threshold to determine overspeeding\n\n// Variables used to determine if acceleration, braking and stopping are happening frequently\nvar stop = 0;\nvar freq_acc = 0;\nvar freq_brake = 0;\n\nvar thres_count = 3; // Threshold of when to consider calculating frequent acceleration, braking and stopping\n\n//Set Harsh Acceleration //recognized if the acceleration data exceeds a threshold value\nmsg.payload.rows[0].value.harsh_acc = (curr_Sr - prev_Sr) > thres_Sr_diff;\nif(msg.payload.rows[0].value.harsh_acc === true){ //set frequency at which Harsh Acceleration happens\n    global.set(\"harsh_acc_count\", global.get(\"harsh_acc_count\") + 1);\n}\n\n//Set Harsh Braking //recognized if the deceleration exceeds the threshold value\nmsg.payload.rows[0].value.harsh_brake = (curr_Sr - prev_Sr) < -thres_Sr_diff;\nif(msg.payload.rows[0].value.harsh_brake === true){ //set frequency at which Harsh Braking happens\n    global.set(\"harsh_brake_count\", global.get(\"harsh_brake_count\") + 1);\n}\n\n//Set Overspeeding //Based on a threshold value\nmsg.payload.rows[0].value.overspeed = curr_Sr > thres_Sr; \nif(msg.payload.rows[0].value.overspeed === true){ //set frequency at which Overspeeding happens\n    global.set(\"overspeed_count\", global.get(\"overspeed_count\") + 1);\n}\n\n//Calculate frequent acceleration, braking and stopping\nif(msg.payload.total_rows > 5){\n\tfor (var i in msg.payload.rows){\n\t\tif(msg.payload.rows[i].value.Sr === 0){\n\t\t\tstop++;\n\t\t}\n\n\t\tif(msg.payload.rows[i].value.harsh_acc === true){\n\t\t\tfreq_acc++;\n\t\t}\n\n\t\tif(msg.payload.rows[i].value.harsh_brake === true){\n\t\t\tfreq_brake++;\n\t\t}\n\t}\n}\n\n//Set Frequent stopping //Frequent stops are recognized if there are many stop instances within a certain range of Car Probe Points\nmsg.payload.rows[0].value.freq_stop = stop > thres_count; \nif(msg.payload.rows[0].value.freq_stop === true){ //set frequency at which Frequent stopping happens\n    global.set(\"freq_stop_count\", global.get(\"freq_stop_count\") + 1);\n}\n\n//Set Frequent Acceleration //Frequent acceleration is detected if the driver frequently exceeds the threshold value within a certain range of Car Probe Points\nmsg.payload.rows[0].value.freq_acc = freq_acc > thres_count;\nif(msg.payload.rows[0].value.freq_acc === true){ //set frequency at which Frequent Acceleration happens\n    global.set(\"freq_acc_count\", global.get(\"freq_acc_count\") + 1);\n}\n\n//Set Frequent Braking //Frequent deceleration is recognized if the driver exceeds the threshold value frequently within a certain range of Car Probe Points\nmsg.payload.rows[0].value.freq_brake = freq_brake > thres_count;\nif(msg.payload.rows[0].value.freq_brake === true){ //set frequency at which Frequent Braking happens\n    global.set(\"freq_brake_count\", global.get(\"freq_brake_count\") + 1);\n}\n\nmsg.payload = msg.payload.rows[0].value;\n\n//Url to be passed to update the doc to which the above data should belong to\nvar url= global.get(\"dburl\")+\"iotdb/\" + msg.payload._id + \"?rev=\" + msg.payload._rev;\nmsg.url = url;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2031.949951171875,
+        "y": 241,
+        "wires": [
+            [
+                "ef1a38c.705cc48"
+            ]
+        ]
+    },
+    {
+        "id": "9f9eb8a1.7907e",
+        "type": "function",
+        "z": "6a1d4770.bb7c",
+        "name": "Driving behavior (1st point)",
+        "func": "//Set the initial values for harsh acceleration, harsh braking and overspeeding to false\n//Set Harsh Acceleration //recognized if the acceleration data exceeds a threshold value\nmsg.payload.rows[0].value.harsh_acc = false;\nglobal.set(\"harsh_acc_count\", 0); //set frequency at which Harsh Acceleration happens (initially 0)\n\n//Set Harsh Braking //recognized if the deceleration exceeds the threshold value\nmsg.payload.rows[0].value.harsh_brake = false;\nglobal.set(\"harsh_brake_count\", 0); //set frequency at which Harsh Braking happens (initially 0)\n\n//Set Overspeeding //Based on a threshold value\nmsg.payload.rows[0].value.overspeed = false;\nglobal.set(\"overspeed_count\", 0); //set frequency at which Overspeeding happens (initially 0)\n\n//Set the initial values for frequent stopping, frequent acceleration and frequent braking to false\n//Set Frequent stopping //Frequent stops are recognized if there are many stop instances within a certain range of Car Probe Points\nmsg.payload.rows[0].value.freq_stop = false; \nglobal.set(\"freq_stop_count\", 0); //set frequency at which Frequent stopping happens (initially 0)\n\n//Set Frequent Acceleration //Frequent acceleration is detected if the driver frequently exceeds the threshold value within a certain range of Car Probe Points\nmsg.payload.rows[0].value.freq_acc = false;\nglobal.set(\"freq_acc_count\", 0); //set frequency at which Frequent Acceleration happens (initially 0)\n\n//Set Frequent Braking //Frequent deceleration is recognized if the driver exceeds the threshold value frequently within a certain range of Car Probe Points\nmsg.payload.rows[0].value.freq_brake = false;\nglobal.set(\"freq_brake_count\", 0); //set frequency at which Frequent Braking happens (initially 0)\n\nmsg.payload = msg.payload.rows[0].value;\n\n//Url to be passed to update the doc to which the above data should belong to\nvar url= global.get(\"dburl\")+\"iotdb/\" + msg.payload._id + \"?rev=\" + msg.payload._rev;\nmsg.url = url;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2073.4498901367188,
+        "y": 196.25003051757812,
+        "wires": [
+            [
+                "ef1a38c.705cc48"
+            ]
+        ]
+    },
+    {
+        "id": "ef1a38c.705cc48",
+        "type": "http request",
+        "z": "6a1d4770.bb7c",
+        "name": "Update",
+        "method": "PUT",
+        "ret": "obj",
+        "url": "",
+        "tls": "",
+        "x": 2293.199981689453,
+        "y": 225.75,
+        "wires": [
+            [
+                "3ff3d051.d7989"
+            ]
+        ]
+    },
+    {
+        "id": "3eff20cb.fcb7",
+        "type": "function",
+        "z": "6a1d4770.bb7c",
+        "name": "",
+        "func": "msg.url = global.get(\"dburl\")+\"iotdb/_design/carProbe/_view/alldocs?limit=10&descending=true\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1412.699966430664,
+        "y": 227.20000648498535,
+        "wires": [
+            [
+                "d5b6fe15.c01f"
+            ]
+        ]
+    },
+    {
+        "id": "e9aeb92a.cc6db8",
+        "type": "function",
+        "z": "6a1d4770.bb7c",
+        "name": "Display Speed",
+        "func": "Sr = msg.payload.Sr;\n\nmsg = {topic:\"Speed\", payload:Sr.toFixed(2)};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1250.7999267578125,
+        "y": 162,
+        "wires": [
+            [
+                "f0022932.1f9118",
+                "70c0400a.6056"
+            ]
+        ]
+    },
+    {
+        "id": "5bd34ed0.8cf158",
+        "type": "function",
+        "z": "6a1d4770.bb7c",
+        "name": "Display Distance",
+        "func": "Dist = global.get(\"distance\");\n\nmsg = {topic:\"Distance\", payload:Dist.toFixed(2)};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1212.7998657226562,
+        "y": 340.50000762939453,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3ff3d051.d7989",
+        "type": "function",
+        "z": "6a1d4770.bb7c",
+        "name": "Harsh Behavior Frequency",
+        "func": "harsh_acc_ctr = global.get(\"harsh_acc_count\");\nharsh_brake_ctr = global.get(\"harsh_brake_count\");\noverspeed_ctr = global.get(\"overspeed_count\");\nfreq_acc_ctr = global.get(\"freq_acc_count\");\nfreq_brake_ctr = global.get(\"freq_brake_count\");\nfreq_stop_ctr = global.get(\"freq_stop_count\");\n\nmsg1 = {topic:\"Harsh Acc.\", payload:harsh_acc_ctr};\nmsg2 = {topic:\"Harsh Brake\", payload:harsh_brake_ctr};\nmsg3 = {topic:\"Overspeeding\", payload:overspeed_ctr};\nmsg4 = {topic:\"Freq. Stop\", payload:freq_acc_ctr};\nmsg5 = {topic:\"Freq. Acc.\", payload:freq_brake_ctr};\nmsg6 = {topic:\"Freq. Brake\", payload:freq_stop_ctr};\n\nreturn [msg1, msg2, msg3, msg4, msg5, msg6];",
+        "outputs": "6",
+        "noerr": 0,
+        "x": 2526,
+        "y": 230,
+        "wires": [
+            [
+                "d9da509b.9d99c",
+                "b55a990d.01653"
+            ],
+            [
+                "d9da509b.9d99c"
+            ],
+            [
+                "d9da509b.9d99c"
+            ],
+            [
+                "d9da509b.9d99c"
+            ],
+            [
+                "d9da509b.9d99c"
+            ],
+            [
+                "d9da509b.9d99c"
+            ]
+        ]
+    },
+    {
+        "id": "d9da509b.9d99c",
+        "type": "ui_chart",
+        "z": "6a1d4770.bb7c",
+        "name": "",
+        "group": "3f1b2ced.54aa54",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Harsh Behaviors Frequency",
+        "chartType": "bar",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "20",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 2843.25,
+        "y": 231.25,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "b55a990d.01653",
+        "type": "debug",
+        "z": "6a1d4770.bb7c",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 2792.75,
+        "y": 165,
+        "wires": []
+    },
+    {
+        "id": "46062ed.cad61d",
+        "type": "inject",
+        "z": "6a1d4770.bb7c",
+        "name": "clear",
+        "topic": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 1243.1999969482422,
+        "y": 58.00000190734863,
+        "wires": [
+            [
+                "f0022932.1f9118",
+                "70c0400a.6056"
+            ]
+        ]
+    },
+    {
+        "id": "806fb848.3d01",
+        "type": "function",
+        "z": "556f3292.5a8894",
+        "name": "SetArgs1",
+        "func": "//Add the following to the data sent be RPI Zero (acceleration in x,y&z direction (in m/s^2), IR (digital value), Ultra-Sonic (in cm))\n//Set a trip ID\nmsg.payload.trip_id = \"trip0001\";\n\n//Set road type\nmsg.payload.road_type = \"Sample Track\";\n\n//Set timestamp\nvar date = new Date();\ndate.setTime(date.getTime() + (4*60*60*1000)); //Added 4hrs as the timezone is Asia/Dubai (can use moment module and set the timezone)\nmsg.payload.timestamp = date.toISOString();\n\n//Set time of the day\nvar hours = date.getHours();\nmsg.payload.hour = hours;\nif (hours>=0 && hours<12){\n    msg.payload.time_of_day = \"Morning\";\n}else if (hours>=12 && hours<16){\n    msg.payload.time_of_day = \"Afternoon\";\n}else if (hours>=16 && hours<20){\n    msg.payload.time_of_day = \"Evening\";\n}else{\n    msg.payload.time_of_day = \"Night\";\n}\n\nif(msg.payload.acc_x < 1 && msg.payload.acc_x > -1){\n    msg.payload.acc_x = 0;\n}\nif(msg.payload.acc_y < 1 && msg.payload.acc_y > -1){\n    msg.payload.acc_y = 0;\n}\nif(msg.payload.acc_z < 1 && msg.payload.acc_z > -1){\n    msg.payload.acc_z = 0;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 222.00000762939453,
+        "y": 142.00000381469727,
+        "wires": [
+            [
+                "7e1f43f1.69fb1c",
+                "beb83dfe.f75728",
+                "4978641e.e6f024",
+                "8a37c4aa.9b5d58",
+                "32515701.60dcd"
+            ]
+        ]
+    },
+    {
+        "id": "c23eb2f5.ec2d7",
+        "type": "inject",
+        "z": "6a1d4770.bb7c",
+        "name": "clear",
+        "topic": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 2570.4000129699707,
+        "y": 62.00000190734863,
+        "wires": [
+            [
+                "d9da509b.9d99c"
+            ]
+        ]
+    },
+    {
+        "id": "f0022932.1f9118",
+        "type": "ui_chart",
+        "z": "6a1d4770.bb7c",
+        "name": "",
+        "group": "8b3dc56f.fce7d8",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "label": "Speed",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "0",
+        "dot": true,
+        "ymin": "0",
+        "ymax": "40",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1456.549919128418,
+        "y": 151.0000057220459,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "70c0400a.6056",
+        "type": "ui_gauge",
+        "z": "6a1d4770.bb7c",
+        "name": "",
+        "group": "6691d398.56cc9c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Speed",
+        "label": "m/s",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "40",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 1453.0500183105469,
+        "y": 95.25000381469727,
+        "wires": []
+    },
+    {
+        "id": "4776c8c2.6e83d8",
+        "type": "ui_gauge",
+        "z": "556f3292.5a8894",
+        "name": "",
+        "group": "d8331ec.88f12e",
+        "order": 3,
+        "width": "0",
+        "height": "0",
+        "gtype": "gage",
+        "title": "Ultra-Sonic",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 817.5000038146973,
+        "y": 328.0000400543213,
+        "wires": []
+    },
+    {
+        "id": "12fd14a2.d3e43b",
+        "type": "ui_chart",
+        "z": "556f3292.5a8894",
+        "name": "",
+        "group": "420ff65e.2d7e38",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "label": "Car Velocity",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "bezier",
+        "nodata": "0",
+        "dot": true,
+        "ymin": "-5",
+        "ymax": "5",
+        "removeOlder": "3",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 828.5000038146973,
+        "y": 428.0000400543213,
+        "wires": [
+            [],
+            []
+        ]
+    }
+]
