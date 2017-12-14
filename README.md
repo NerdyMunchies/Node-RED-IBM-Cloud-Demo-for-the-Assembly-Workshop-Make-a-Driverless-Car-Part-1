@@ -1,30 +1,30 @@
 # Node-RED IBM Cloud Demo for the Assembly Workshop - Make a Driverless Car Part 1
-### Node-RED in IBM Cloud
+## Node-RED in IBM Cloud
 Node-RED is an open source visual flow-based programming tool used for wiring not only Internet of Things (IoT) components, but also integrating an ensemble of service APIs, including ones provided by IBM Cloud.
 
 This repository provides an example of a Node-RED application that is supposed to grab car probe data from a Raspberry PI that is positioned inside an RC car and visualize both the data and the driver behavior analysis. This data is collected from sensors including infrared, ultra-sonic and accelerometer (MPU-6050) modules. A GPS module is not used to allow the usage of the system in-doors.
 
 The application explored in this repository can be deployed into IBM Cloud via the simple steps explained below.
 
-### How does the system work?
+## How does the system work?
 The Raspberry PI Zero communicates with the sensors to collect information that is to be sent to IBM Cloud via MQTT. This process is simplified through the usage of the **Internet of Things Platform** service available on IBM Cloud. To this data, various pieces of information are added to provide more details about the car probe point collected. This information includes the trip ID, the timestamp, and time of the day. Additionally, the distance and speed are calculated from the sensor data. 
 
 Since the system is to be operable in-doors and collect information that will allow performing a simple driver behavior analysis, the latitude, longitude and heading are calculated to simulate the GPS data as realistically as possible. Driver behavior analysis involves measuring points at which harsh acceleration, harsh braking, over-speeding, frequent harsh acceleration, frequent harsh braking, and frequent stopping take place. Both the car probe data and the driver behavior analysis are both stored in a **Cloudant NoSQL database** to allow the convenient access to it at any point in time.
 The connecting of the described components is made possible and simple through the deploying a Node-RED Node.js application instance.
 
 
-### Architecture overview
+## Architecture overview
 An architecture overview of the system can be found below.
 
 ![architecture_overview](https://user-images.githubusercontent.com/10744356/33858499-45ab2b3c-dee9-11e7-96e0-2012d01d0f67.png)
 
-For the connection between the Raspberry PI and the sensor, check the schematic below (refer to [IBM_selfdriving](https://github.com/The-Assembly/IBM_selfdriving) for more details on the hardware side of things).
-[Alt Text]()
+For the connection between the Raspberry PI and the sensor, check the schematic below (refer to [IBM_selfdriving](https://github.com/The-Assembly/IBM_selfdriving) repository for more details on the hardware side of things).
+![rpi_connections](https://user-images.githubusercontent.com/10744356/33993138-b8b996ca-e0ee-11e7-8d20-355460c3e034.png)
 
-### Pre-requisite
+## Pre-requisite
 An IBM Cloud account - A lite account, which is a free of charge account that doesn’t expire, can be created through going to [IBM Cloud](bluemix.net). <br/>
 
-### Creating the Node-RED application and other components
+## Creating the Node-RED application and other components
 There are three components to configure: <br/>
 -	Node-RED application <br/>
 -	Internet of Things Platform service <br/>
@@ -34,10 +34,10 @@ To simplify connecting these three, a boilerplate called Internet of Things Plat
 
 ![Alt Text](https://j.gifs.com/59WvjB.gif)
 
-### Steps to configure the Node-RED application and other components
+## Steps to configure the Node-RED application and other components
 From the hamburger menu at the top left of the page, the user can access the dashboard, which will allow the user to see all the applications and services that have been created. Click on the name of the application to go to a window that provides more details about the application. If you click on **Connection** on the menu seen on the left hand-side, you will notice that there are two connections: <app-name>-cloudantNoSQLDB and <app-name>-iotf-service.
 
-#### Internet of Things Platform service
+### Internet of Things Platform service
 If we click on <app-name>-iotf-service, it will take us to the page with the details about the IoT Platform service. Go to **Manage** and then click on **Launch**. This will take us to the page where we can configure devices we can connect to among other things. At the top right of the page, we see an ID, this is the organization ID and it is one of the things needed to configure the connection between a device and the **IoT Platform** service.
 
 Here, we are required to configure a device type to which we will be adding a device. Go to **Devices** from the menu on the left, and from the newly opened page, click on **Device Types** followed by **Add Device Type**. Here you will provide the name and metadata describing the device type to create the device type. Then, click **Register Devices** to add a device to that particular device type. Enter a Device ID, metadata describing the device and select an option to define the authentication token. After you are done, you will be directed to a page summarizing the device’s credentials. Copy the credentials into a notepad for later use (It will be used by both the Raspberry PI to send data and the Node-RED application to get the data.
@@ -75,7 +75,7 @@ client.disconnect()
 ```
 In case the Raspberry PI is not available at hand, you can use the file called **send_sample.py** in this repository to simulate the data by typing ```python3 send_sample.py```, given that you have python3 installed on your device. <br/>
 
-#### Cloudant NoSQL database
+### Cloudant NoSQL database
 If we click on <app-name>-cloudantNoSQLDB, it will take us to the page with the details about the Cloudant NoSQL DB service. Click on Service Credentials on the menu seen on the left hand-side.  If no service credentials are found, create a new credential. Go to the newly created credential and select View credentials. Then, copy both the content into a notepad for later use. The username and password will be used for authentication to allow us to communicate with the database.
 
 ![Alt Text](https://j.gifs.com/L8PO8g.gif)
@@ -88,7 +88,7 @@ One way we ensure that we define what categories of data we might need from the 
 
 ![Alt Text](https://j.gifs.com/MQ9PwB.gif)
 
-#### Node-RED application
+### Node-RED application
 Go back to the dashboard and click on the application you created earlier. In order to access the Node-RED editor used to build the application, click on **Visit App URL**. Follow the directions to access the Node-RED editor (you are encouraged to secure your Node-RED editor to ensure that only authorized users can access it). Click on **Go to your Node-RED flow editor**.
 
 ![Alt Text](https://j.gifs.com/329gw4.gif)
@@ -125,10 +125,3 @@ One of the **dashboard** nodes missing in the **Raw Data Dashboard** is the one 
 [Alt Text](https://j.gifs.com/MQ9P25.gif)
 
 You can import the finale version of the flow from the file **Node-RED flow_Full.json** that can be found in this repository.
-
-
-
-
-
-
-![Alt Text](https://j.gifs.com/MQ9P25.gif)
