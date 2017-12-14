@@ -14,7 +14,12 @@ The connecting of the described components is made possible and simple through t
 
 
 ### Architecture overview
+An architecture overview of the system can be found below.
+
 ![architecture_overview](https://user-images.githubusercontent.com/10744356/33858499-45ab2b3c-dee9-11e7-96e0-2012d01d0f67.png)
+
+For the connection between the Raspberry PI and the sensor, check the schematic below (refer to [IBM_selfdriving](https://github.com/The-Assembly/IBM_selfdriving) for more details on the hardware side of things).
+[Alt Text]()
 
 ### Pre-requisite
 An IBM Cloud account - A lite account, which is a free of charge account that doesn’t expire, can be created through going to [IBM Cloud](bluemix.net). <br/>
@@ -109,5 +114,21 @@ For all of the HTTP request nodes, make sure to add the username and password pr
 
 ![auth_http](https://user-images.githubusercontent.com/10744356/33990246-b38f1fb8-e0e3-11e7-8a18-bf949b7459ea.PNG)
 
-Now that all the operational nodes are done, it is time to create and customize the dashboard, which provides the User Interface (UI) part of the application. On the right hand-side of the page, click on the **dashboard** tab. We will notice that there are 3 tabs, each used to change the look and feel of the UI.
+Now that all the operational nodes are done, it is time to create and customize the dashboard, which provides the User Interface (UI) part of the application. On the right hand-side of the page, click on the **dashboard** tab. We will notice that there are 3 tabs, each used to change the look and feel of the UI. This can also be seen from the previous images.
 
+To use one of the nodes under the **dashboard** node type, we first create a **tab**, which can resemble a page in the UI, to which we add a **group** that is used to collate similar widgets together. Each widget or dashboard component to added to one of the created groups. All components can be customized based on preference.
+
+![Alt Text](https://j.gifs.com/4R9jvx.gif)
+
+One of the **dashboard** nodes missing in the **Raw Data Dashboard** is the one to display the IR values on a gauge. To do that, just drag the node, and configure it as seen below. This will need to be done for any values that needs to be displayed, whether as a graph, gauge, or simply a number.
+
+[Alt Text](https://j.gifs.com/MQ9P25.gif)
+
+You can import the finale version of the flow from the file **Node-RED flow_Full.json** that can be found in this repository.
+
+
+
+
+
+
+![Alt Text](https://j.gifs.com/MQ9P25.gif)
