@@ -26,7 +26,7 @@ For the connection between the Raspberry PI and the sensor, check the schematic 
 
 
 ## Pre-requisite
-An IBM Cloud account - A lite account, which is a free of charge account that doesn’t expire, can be created through going to [IBM Cloud](bluemix.net). <br/>
+An IBM Cloud account - A lite account, which is a free of charge account that doesn’t expire, can be created through going to [IBM Cloud](http://ibm.biz/AssemblyCar1). <br/>
 
 
 ## Creating the Node-RED application and other components
