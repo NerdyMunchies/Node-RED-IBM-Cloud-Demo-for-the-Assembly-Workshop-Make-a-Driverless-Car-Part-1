@@ -43,7 +43,7 @@ To simplify connecting these three, a boilerplate called Internet of Things Plat
 ## Steps to configure the Node-RED application and other components
 From the hamburger menu at the top left of the page, the user can access the dashboard, which will allow the user to see all the applications and services that have been created. Click on the name of the application to go to a window that provides more details about the application. If you click on **Connection** on the menu seen on the left hand-side, you will notice that there are two connections: <app-name>-cloudantNoSQLDB and <app-name>-iotf-service.
 
-### Internet of Things Platform service
+### Step 1: Setting up Internet of Things Platform service
 If we click on <app-name>-iotf-service, it will take us to the page with the details about the IoT Platform service. Go to **Manage** and then click on **Launch**. This will take us to the page where we can configure devices we can connect to among other things. At the top right of the page, we see an ID, this is the organization ID and it is one of the things needed to configure the connection between a device and the **IoT Platform** service.
 
 Here, we are required to configure a device type to which we will be adding a device. Go to **Devices** from the menu on the left, and from the newly opened page, click on **Device Types** followed by **Add Device Type**. Here you will provide the name and metadata describing the device type to create the device type. Then, click **Register Devices** to add a device to that particular device type. Enter a Device ID, metadata describing the device and select an option to define the authentication token. After you are done, you will be directed to a page summarizing the device’s credentials. Copy the credentials into a notepad for later use (It will be used by both the Raspberry PI to send data and the Node-RED application to get the data.
@@ -81,7 +81,7 @@ client.disconnect()
 ```
 In case the Raspberry PI is not available at hand, you can use the file called **send_sample.py** in this repository to simulate the data by typing ```python3 send_sample.py```, given that you have python3 installed on your device. <br/>
 
-### Cloudant NoSQL database
+### Step 2: Setting up Cloudant NoSQL database
 If we click on <app-name>-cloudantNoSQLDB, it will take us to the page with the details about the Cloudant NoSQL DB service. Click on Service Credentials on the menu seen on the left hand-side.  If no service credentials are found, create a new credential. Go to the newly created credential and select View credentials. Then, copy both the content into a notepad for later use. The username and password will be used for authentication to allow us to communicate with the database.
 
 ![Alt Text](https://j.gifs.com/L8PO8g.gif)
@@ -94,7 +94,7 @@ One way we ensure that we define what categories of data we might need from the 
 
 ![Alt Text](https://j.gifs.com/MQ9PwB.gif)
 
-### Node-RED application
+### Step 3: Setting up Node-RED application
 Go back to the dashboard and click on the application you created earlier. In order to access the Node-RED editor used to build the application, click on **Visit App URL**. Follow the directions to access the Node-RED editor (you are encouraged to secure your Node-RED editor to ensure that only authorized users can access it). Click on **Go to your Node-RED flow editor**.
 
 ![Alt Text](https://j.gifs.com/329gw4.gif)
